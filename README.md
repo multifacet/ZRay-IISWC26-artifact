@@ -1,4 +1,4 @@
-# ZRay IISWC Artifact
+# ZRay IISWC'26 Artifact
 
 This repository provides an automated way to build ZRay and run the GAP Benchmark
 Suite (GAPBS) experiments used for artifact evaluation and verifying ZRay's functionality.
