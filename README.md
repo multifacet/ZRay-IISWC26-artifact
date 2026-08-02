@@ -12,7 +12,7 @@ Suite (GAPBS) experiments used for artifact evaluation and verifying ZRay's func
 
 We recommend using a CloudLab `sm110p` or `sm220u` node and selecting the maximum
 available tempfs partition. Other CloudLab node types should also work, including
-nodes with non-x86 architectures for the ZRay experiments. Pin requires an Intel server.
+nodes with non-x86 architectures for the ZRay experiments. Pin requires an Intel machine.
 
 ## Setup
 
@@ -55,5 +55,3 @@ summaries in `gapbs-pin/`:
 - `pin-byte-stats.csv`
 
 These measurements can be compared against the csv data obtained after running the workloads with ZRay.
-
-For details about ZRay itself, see [`ZRay/readme.md`](ZRay/readme.md).
