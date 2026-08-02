@@ -16,8 +16,22 @@ cd $ARTIFACT_HOME/ZRay
 . ./setupEnv.sh
 
 # Build GAPBS
-echo "3. Building GAPBS"
+echo "3. Building GAPBS with ZRay instrumentation"
 cd $ARTIFACT_HOME/gapbs
+make -j$(nproc)
+make bench-graphs
+
+# Dowload pin from Intel and copy into pintool directory
+wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz
+mv pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz $ARTIFACT_HOME/pintool
+cd $ARTIFACT_HOME/pintool
+tar -xf pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz
+. ./env.sh
+./build.sh
+
+# Build GAPBS
+echo "3. Building GAPBS with pin instrumentation"
+cd $ARTIFACT_HOME/gapbs-pin
 make -j$(nproc)
 make bench-graphs
 
