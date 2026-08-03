@@ -1,6 +1,26 @@
 #!/bin/bash
 
-ARTIFACT_HOME=`pwd`
+set -e
+
+ARTIFACT_HOME="$(cd "$(dirname "$0")" && pwd)"
+WITH_PIN=0
+
+usage() {
+    cat <<'EOF'
+Usage: ./setup.sh [--with-pin]
+
+Build ZRay and the instrumented GAPBS workloads. Pass --with-pin to also
+download Intel Pin, build the Pintool, and build the Pin-instrumented GAPBS
+workloads used for the optional validation experiment.
+EOF
+}
+
+case "${1:-}" in
+    "") ;;
+    --with-pin) WITH_PIN=1 ;;
+    -h|--help) usage; exit 0 ;;
+    *) usage >&2; exit 1 ;;
+esac
 
 # Install LLVM-15
 echo "1. Installing LLVM"
@@ -21,20 +41,28 @@ cd $ARTIFACT_HOME/gapbs
 make -j$(nproc)
 make bench-graphs
 
-# Dowload pin from Intel and copy into pintool directory
-wget https://software.intel.com/sites/landingpage/pintool/downloads/pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz
-mv pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz $ARTIFACT_HOME/pintool
-cd $ARTIFACT_HOME/pintool
-tar -xf pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz
-. ./env.sh
-./build.sh
+if [ "$WITH_PIN" -eq 1 ]; then
+    # Download Intel Pin and build the optional Pin validation workflow.
+    PIN_TARBALL=pin-external-4.3-99850-gce5652921-gcc-linux.tar.gz
+    PIN_URL=https://software.intel.com/sites/landingpage/pintool/downloads/$PIN_TARBALL
+    cd "$ARTIFACT_HOME/pintool"
+    if [ ! -f "$PIN_TARBALL" ]; then
+        wget "$PIN_URL"
+    fi
+    tar -xf "$PIN_TARBALL"
+    . ./env.sh
+    ./build.sh
 
-# Build GAPBS
-echo "3. Building GAPBS with pin instrumentation"
-cd $ARTIFACT_HOME/gapbs-pin
-make -j$(nproc)
-make bench-graphs
+    echo "4. Building GAPBS with Pin instrumentation"
+    cd "$ARTIFACT_HOME/gapbs-pin"
+    make -j$(nproc)
+    make bench-graphs
+fi
 
-# Optional - install pip, scipy and pandas for running a script that generates a summary csv with data volume rate geomeans for the entire suite
+# Install packages required to generate the ZRay bandwidth-summary CSV.
 sudo apt install -y python3-pip
 pip install scipy pandas
+
+if [ "$WITH_PIN" -eq 0 ]; then
+    echo "Pin validation was not installed. To add it later, run: ./setup.sh --with-pin"
+fi
