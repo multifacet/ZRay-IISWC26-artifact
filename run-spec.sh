@@ -28,6 +28,15 @@ if [ $# -gt 0 ]; then WORKLOADS=("$@"); SUBSET=1; fi
 cd "$ARTIFACT_HOME/ZRay" && . ./setupEnv.sh
 cd "$ARTIFACT_HOME"
 
+# Check what the measurement step needs before spending ~70 minutes building. SPEC's
+# generated commands bind each run with numactl, so a missing numactl fails every run
+# with exit 127 -- but only after the build has completed.
+if ! command -v numactl > /dev/null 2>&1; then
+    echo "numactl not found, but SPEC's run commands require it." >&2
+    echo "Install it first:  sudo apt install -y numactl" >&2
+    exit 1
+fi
+
 # Build anything not yet built. This is a no-op once the workloads exist, so the
 # reviewer only ever needs ./setup.sh followed by this script.
 "$ARTIFACT_HOME/spec/build-spec.sh" "${WORKLOADS[@]}"
@@ -57,11 +66,23 @@ run_variant() {
     { echo "#!/bin/bash"; echo "cd \"$rd\""
       "$ARTIFACT_HOME/spec/spec-cmds.sh" "$rd" "$bin" "$variant"; } > "$script"
     chmod +x "$script"
+    # The workloads write their own output to SPEC's .out/.err files, so the only thing
+    # on this script's stderr is the harness failing -- keep it. Discarding it once cost
+    # a 73 minute run that reported "exit 127" with no indication that numactl was
+    # simply not installed.
+    local errlog="$rd/.run-$variant.err"
+    local rc=0
     if [ -n "$timefile" ]; then
-        /usr/bin/time -f "Time: %e\nMax RSS: %M" -o "$timefile" bash "$script" >/dev/null 2>&1
+        /usr/bin/time -f "Time: %e\nMax RSS: %M" -o "$timefile" bash "$script" >/dev/null 2>"$errlog" || rc=$?
     else
-        bash "$script" >/dev/null 2>&1
+        bash "$script" >/dev/null 2>"$errlog" || rc=$?
     fi
+    if [ "$rc" -ne 0 ]; then
+        echo "    $variant run failed (exit $rc)" >&2
+        sed -n '1,3p' "$errlog" | sed 's/^/      /' >&2
+        echo "      full stderr: $errlog" >&2
+    fi
+    return $rc
 }
 
 for w in "${WORKLOADS[@]}"; do

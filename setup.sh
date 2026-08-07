@@ -132,6 +132,12 @@ fi
 if [ "$WITH_SPEC" -eq 1 ]; then
     echo "5. Installing SPEC CPU2017 from $SPEC_PATH"
 
+    # numactl is a hard dependency of the run step, not of the install: SPEC's own
+    # generated commands bind each run to one core ("numactl -m 0 --physcpubind=0"),
+    # and spec-cmds.sh reproduces them verbatim. Without it every measured run exits
+    # 127 -- after the ~70 minute build has already completed.
+    sudo apt install -y numactl
+
     if [ -d "$SPEC_INSTALL" ]; then
         echo "   $SPEC_INSTALL already exists; skipping install."
     else

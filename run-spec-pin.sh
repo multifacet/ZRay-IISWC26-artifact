@@ -26,6 +26,14 @@ cd "$ARTIFACT_HOME"
 
 # Build anything not yet built. This is a no-op once the workloads exist, so the
 # reviewer only ever needs ./setup.sh followed by this script.
+# SPEC's generated run commands bind each run with numactl; without it every measured
+# run exits 127. Check before building rather than after.
+if ! command -v numactl > /dev/null 2>&1; then
+    echo "numactl not found, but SPEC's run commands require it." >&2
+    echo "Install it first:  sudo apt install -y numactl" >&2
+    exit 1
+fi
+
 "$ARTIFACT_HOME/spec/build-spec.sh" "${WORKLOADS[@]}"
 
 PINCMD="$PIN_ROOT/pin -t $PIN_ROI_DIR/obj-intel64/roitrace-mt.so --"
@@ -73,11 +81,22 @@ run_variant() {
     } > "$script"
     chmod +x "$script"
 
+    # Keep stderr: the workloads write their own output to SPEC's .out/.err files, so
+    # anything here is the harness failing. Discarding it hid a missing numactl behind
+    # a bare "exit 127".
+    local errlog="$rd/.run-pin-$variant.err"
+    local rc=0
     if [ -n "$timefile" ]; then
-        /usr/bin/time -f "Time: %e\nMax RSS: %M" -o "$timefile" bash "$script" >/dev/null 2>&1
+        /usr/bin/time -f "Time: %e\nMax RSS: %M" -o "$timefile" bash "$script" >/dev/null 2>"$errlog" || rc=$?
     else
-        bash "$script" >/dev/null 2>&1
+        bash "$script" >/dev/null 2>"$errlog" || rc=$?
     fi
+    if [ "$rc" -ne 0 ]; then
+        echo "    pin run failed (exit $rc)" >&2
+        sed -n '1,3p' "$errlog" | sed 's/^/      /' >&2
+        echo "      full stderr: $errlog" >&2
+    fi
+    return $rc
 }
 
 for w in "${WORKLOADS[@]}"; do
