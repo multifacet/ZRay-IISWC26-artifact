@@ -6,6 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
+@@ -629 +634 @@
+-bitmap_set_bit (bitmap head, int bit)
++bitmap_set_bit (bitmap head, int bit) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -630,0 +636,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("bitmap_set_bit");
@@ -27,6 +30,9 @@
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
+@@ -656 +679 @@
+-bitmap_bit_p (bitmap head, int bit)
++bitmap_bit_p (bitmap head, int bit) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -657,0 +681,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("bitmap_bit_p");

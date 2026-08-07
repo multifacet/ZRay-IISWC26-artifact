@@ -6,6 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
+@@ -132 +137 @@
+-static int intersect(VBVHTree *obj, Isect *isec)
++static int intersect(VBVHTree *obj, Isect *isec) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -133,0 +139,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("intersect");

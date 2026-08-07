@@ -1,0 +1,62 @@
+--- a/500.perlbench_r/pp_hot.c
++++ b/500.perlbench_r/pp_hot.c
+@@ -37,0 +38,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -48,0 +54,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("pp_nextstate");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -54,0 +66,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("pp_nextstate");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -112,0 +130,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("pp_and");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -121 +144,7 @@
+-	if (!SvTRUE_NN(sv))
++	if (!SvTRUE_NN(sv)) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("pp_and");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -123 +152 @@
+-	else {
++    } else {
+@@ -125,0 +155,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("pp_and");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -403,0 +439,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("pp_padsv");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -424,0 +466,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("pp_padsv");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

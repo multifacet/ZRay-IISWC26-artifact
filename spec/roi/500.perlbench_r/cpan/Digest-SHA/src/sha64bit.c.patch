@@ -1,21 +1,20 @@
---- a/511.povray_r/csg.cpp
-+++ b/511.povray_r/csg.cpp
-@@ -47,0 +48,5 @@
-+/* Add instrumentation function for the pintool */
+--- a/500.perlbench_r/cpan/Digest-SHA/src/sha64bit.c
++++ b/500.perlbench_r/cpan/Digest-SHA/src/sha64bit.c
+@@ -94,0 +95,4 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
-@@ -236,0 +242,6 @@
+@@ -96,0 +101,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_begin("All_CSG_Intersect_Intersections");
++    custom_roi_begin("sha512");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_BEGIN 1");
 +#endif
-@@ -298,0 +310,6 @@
+@@ -114,0 +125,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("All_CSG_Intersect_Intersections");
++    custom_roi_end("sha512");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");

@@ -1,28 +1,28 @@
---- a/511.povray_r/planes.cpp
-+++ b/511.povray_r/planes.cpp
-@@ -38,0 +39,5 @@
+--- a/511.povray_r/objects.cpp
++++ b/511.povray_r/objects.cpp
+@@ -39,0 +40,5 @@
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
-@@ -104,0 +110,6 @@
+@@ -207,0 +213,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_begin("All_Plane_Intersections");
++    custom_roi_begin("Ray_In_Bound");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_BEGIN 1");
 +#endif
-@@ -115,0 +127,6 @@
+@@ -218,0 +230,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("All_Plane_Intersections");
++    custom_roi_end("Ray_In_Bound");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
-@@ -119,0 +137,6 @@
+@@ -225,0 +243,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("All_Plane_Intersections");
++    custom_roi_end("Ray_In_Bound");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");

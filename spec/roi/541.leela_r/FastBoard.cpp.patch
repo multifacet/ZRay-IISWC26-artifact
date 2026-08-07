@@ -1,12 +1,13 @@
 --- a/541.leela_r/FastBoard.cpp
 +++ b/541.leela_r/FastBoard.cpp
-@@ -656,0 +657,5 @@
+@@ -657 +657,12 @@
+-void FastBoard::merge_strings(const int ip, const int aip) {            
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
-@@ -657,0 +663,6 @@
++void FastBoard::merge_strings(const int ip, const int aip) __attribute__((noinline)) /* Disable inlining for ZRay ROI */ {            
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("merge_strings");
 +#endif
@@ -20,7 +21,9 @@
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
-@@ -1271,0 +1289,6 @@
+@@ -1271 +1288,7 @@
+-bool FastBoard::self_atari(int color, int vertex) {    
++bool FastBoard::self_atari(int color, int vertex) __attribute__((noinline)) /* Disable inlining for ZRay ROI */ {    
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("self_atari");
 +#endif

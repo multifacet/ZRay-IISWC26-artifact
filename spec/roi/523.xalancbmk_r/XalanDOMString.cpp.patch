@@ -8,6 +8,9 @@
 +
 @@ -699 +703,0 @@
 -
+@@ -705 +709 @@
+-			size_type				theRHSLength)
++			size_type				theRHSLength) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -706,0 +711,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("XalanDOMString::equals");
@@ -43,6 +46,9 @@
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
+@@ -742 +776 @@
+-			const XalanDOMString&	theRHS)
++			const XalanDOMString&	theRHS) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -743,0 +778,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("XalanDOMString::equals");

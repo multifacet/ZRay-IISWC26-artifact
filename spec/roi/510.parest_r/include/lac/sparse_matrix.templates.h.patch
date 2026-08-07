@@ -6,7 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
-@@ -540,0 +546,6 @@
+@@ -540 +545,7 @@
+-{
++__attribute__((noinline)) /* Disable inlining for ZRay ROI */ {
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("SparseMatrix<number>::vmult");
 +#endif

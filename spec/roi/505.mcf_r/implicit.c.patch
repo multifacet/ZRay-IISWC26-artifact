@@ -6,7 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
-@@ -449,0 +455,6 @@
+@@ -449 +454,7 @@
+-{
++__attribute__((noinline)) /* Disable inlining for ZRay ROI */ {
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("price_out_impl");
 +#endif

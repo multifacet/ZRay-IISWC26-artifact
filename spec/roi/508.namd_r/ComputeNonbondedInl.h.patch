@@ -6,7 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
-@@ -36,0 +42,6 @@
+@@ -36 +41,7 @@
+-				  BigReal r2_delta, BigReal *r2list) {
++				  BigReal r2_delta, BigReal *r2list) __attribute__((noinline)) /* Disable inlining for ZRay ROI */ {
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("pairlist_from_pairlist");
 +#endif

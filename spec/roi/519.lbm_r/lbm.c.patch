@@ -6,7 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
-@@ -262,0 +268,6 @@
+@@ -262 +267,7 @@
+-void LBM_performStreamCollideTRT( LBM_Grid srcGrid, LBM_Grid dstGrid ) {
++void LBM_performStreamCollideTRT( LBM_Grid srcGrid, LBM_Grid dstGrid ) __attribute__((noinline)) /* Disable inlining for ZRay ROI */ {
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("LBM_performStreamCollideTRT");
 +#endif

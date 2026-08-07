@@ -4,24 +4,55 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
-@@ -684,0 +688,6 @@
+@@ -683 +686 @@
+-lzma_mf_bt4_find(lzma_mf *mf, lzma_match *matches)
++lzma_mf_bt4_find(lzma_mf *mf, lzma_match *matches) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
+@@ -685 +688,25 @@
+-	header_find(true, 4);
 +#ifdef PIN_ROI_INSTRUMENTATION
 +	custom_roi_begin("lzma_mf_bt4_find");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_BEGIN 1");
 +#endif
-@@ -722,0 +732,6 @@
-+#ifdef PIN_ROI_INSTRUMENTATION
-+			custom_roi_end("lzma_mf_bt4_find");
-+#endif
-+#ifdef ZRAY_ROI_INSTRUMENTATION
-+asm volatile("#ZRAY_ROI_END 1");
-+#endif
-@@ -730,0 +746,6 @@
++	// header_find(true, 4);
++	uint32_t len_limit = mf_avail(mf);
++	if (mf->nice_len <= len_limit) {
++		len_limit = mf->nice_len;
++	} else if (len_limit < (4)
++			|| (true && mf->action == LZMA_SYNC_FLUSH)) {
++		assert(mf->action != LZMA_RUN);
++		move_pending(mf);
 +#ifdef PIN_ROI_INSTRUMENTATION
 +	custom_roi_end("lzma_mf_bt4_find");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
++		return 0;
++	}
++	const uint8_t *cur = mf_ptr(mf);
++	const uint32_t pos = mf->read_pos + mf->offset;
++	uint32_t matches_count = 0;
+@@ -722,0 +750,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++			custom_roi_end("lzma_mf_bt4_find");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -730 +763,13 @@
+-	bt_find(len_best);
++	// bt_find(len_best);
++	matches_count = bt_find_func(len_limit, pos, cur, cur_match, mf->depth,
++				mf->son, mf->cyclic_pos, mf->cyclic_size,
++				matches + matches_count, len_best)
++			- matches;
++	move_pos(mf);
++#ifdef PIN_ROI_INSTRUMENTATION
++	custom_roi_end("lzma_mf_bt4_find");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++	return matches_count;

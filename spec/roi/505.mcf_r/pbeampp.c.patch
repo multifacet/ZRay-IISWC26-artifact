@@ -1,28 +1,59 @@
 --- a/505.mcf_r/pbeampp.c
 +++ b/505.mcf_r/pbeampp.c
-@@ -77,0 +78,4 @@
+@@ -28,0 +29,5 @@
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
-@@ -95,0 +100,6 @@
++
+@@ -68 +73,13 @@
+-  if( (*b1)->abs_cost < (*b2)->abs_cost )
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_begin("primal_bea_mpp");
++    custom_roi_begin("cost_compare");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_BEGIN 0");
 +#endif
-@@ -174,0 +185,6 @@
++  if( (*b1)->abs_cost < (*b2)->abs_cost ) {
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("primal_bea_mpp");
++    custom_roi_end("cost_compare");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 0");
 +#endif
-@@ -185,0 +202,6 @@
+@@ -70 +87,8 @@
+-  if( (*b1)->abs_cost > (*b2)->abs_cost )
++  }
++  if( (*b1)->abs_cost > (*b2)->abs_cost ) {
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("primal_bea_mpp");
++    custom_roi_end("cost_compare");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 0");
 +#endif
+@@ -72 +96,8 @@
+-  if( (*b1)->a->id > (*b2)->a->id )
++  }
++  if( (*b1)->a->id > (*b2)->a->id ) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("cost_compare");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 0");
++#endif
+@@ -74 +105,7 @@
+-  else
++  } else {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("cost_compare");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 0");
++#endif
+@@ -75,0 +113 @@
++  }
+@@ -78 +115,0 @@
+-
+@@ -95 +132 @@
+-{
++__attribute__((noinline)) /* Disable inlining for ZRay ROI */ {

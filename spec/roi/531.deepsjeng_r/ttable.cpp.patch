@@ -6,7 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
-@@ -176,0 +182,6 @@
+@@ -176 +181,7 @@
+-            int *nosingular, const int depth) {
++            int *nosingular, const int depth) __attribute__((noinline)) /* Disable inlining for ZRay ROI */ {
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("ProbeTT");
 +#endif

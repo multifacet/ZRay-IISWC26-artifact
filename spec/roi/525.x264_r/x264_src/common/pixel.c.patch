@@ -1,11 +1,13 @@
 --- a/525.x264_r/x264_src/common/pixel.c
 +++ b/525.x264_r/x264_src/common/pixel.c
-@@ -233,0 +234,5 @@
+@@ -234 +234,6 @@
+-static NOINLINE int x264_pixel_satd_8x4( uint8_t *pix1, int i_pix1, uint8_t *pix2, int i_pix2 )
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
++static NOINLINE int x264_pixel_satd_8x4( uint8_t *pix1, int i_pix1, uint8_t *pix2, int i_pix2 ) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -235,0 +241,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("x264_pixel_satd_8x4");

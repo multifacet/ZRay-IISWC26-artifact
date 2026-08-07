@@ -222,22 +222,22 @@ SPEC_LABEL = "zray"
 # ZRay's region names cannot serve here -- they also list every function it cloned,
 # which for gcc and parest runs to several hundred mangled entries.
 SPEC_ROI = {
-    "perlbench": "Perl_sv_setsv_flags;S_regmatch",
+    "perlbench": "pp_and;pp_enter;pp_nextstate;pp_padsv;sha512",
     "gcc": "bitmap_bit_p;bitmap_set_bit",
-    "mcf": "price_out_impl;primal_bea_mpp;spec_qsort",
+    "mcf": "cost_compare;price_out_impl",
     "namd": "pairlist_from_pairlist",
     "parest": "SparseILU::vmult;SparseMatrix::vmult",
-    "povray": "All_CSG_Intersect_Intersections;All_Plane_Intersections",
+    "povray": "Check_And_Enqueue;Ray_In_Bound",
     "lbm": "LBM_performStreamCollideTRT",
-    "omnetpp": "cGate::deliver;cMessageHeap::removeFirst;cSimulation::selectNextModule",
-    "xalancbmk": "XalanDOMString::equals;destroyObject",
-    "x264": "get_ref;mc_weight;x264_pixel_satd_8x4",
+    "omnetpp": "cMessageHeap::removeFirst;cSimulation::selectNextModule",
+    "xalancbmk": "XalanDOMString::equals",
+    "x264": "get_ref;x264_pixel_satd_8x4",
     "blender": "intersect",
-    "deepsjeng": "ProbeTT;search",
+    "deepsjeng": "ProbeTT",
     "imagick": "MorphologyApply",
     "leela": "merge_strings;self_atari",
     "nab": "mme34",
-    "xz": "lzma_decode;lzma_mf_bt4_find",
+    "xz": "lzma_mf_bt4_find",
 }
 
 

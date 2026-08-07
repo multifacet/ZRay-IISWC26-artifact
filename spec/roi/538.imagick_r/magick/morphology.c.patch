@@ -6,6 +6,9 @@
 +#include <pinroi.h>
 +#endif
 +
+@@ -3830 +3835 @@
+-     const double bias, ExceptionInfo *exception)
++     const double bias, ExceptionInfo *exception) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -3831,0 +3837,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("MorphologyApply");

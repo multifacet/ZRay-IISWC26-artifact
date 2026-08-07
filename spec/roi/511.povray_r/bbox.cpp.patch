@@ -1,0 +1,164 @@
+--- a/511.povray_r/bbox.cpp
++++ b/511.povray_r/bbox.cpp
+@@ -51,0 +52,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -1149,0 +1155,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -1171 +1182,9 @@
+-        if (dmax < EPSILON) return;
++        if (dmax < EPSILON) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++          return;
++        }
+@@ -1177 +1196,9 @@
+-        if (dmax < EPSILON) return;
++        if (dmax < EPSILON) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++          return;
++        }
+@@ -1182 +1209,9 @@
+-      if (dmin > dmax) return;
++      if (dmin > dmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++        return;
++      }
+@@ -1188,0 +1224,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1225 +1266,9 @@
+-        if (tmax < EPSILON) return;
++        if (tmax < EPSILON) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++          return;
++        }
+@@ -1231 +1280,9 @@
+-          if (tmin > tmax) return;
++          if (tmin > tmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++            return;
++          }
+@@ -1239 +1296,9 @@
+-          if (dmin > tmax) return;
++          if (dmin > tmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++            return;
++          }
+@@ -1250 +1315,9 @@
+-          if (tmin > dmax) return;
++          if (tmin > dmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++            return;
++          }
+@@ -1264,0 +1338,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1286 +1365,9 @@
+-        if (tmax < EPSILON) return;
++        if (tmax < EPSILON) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++          return;
++        }
+@@ -1292 +1379,9 @@
+-          if (tmin > tmax) return;
++          if (tmin > tmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++            return;
++          }
+@@ -1300 +1395,9 @@
+-          if (dmin > tmax) return;
++          if (dmin > tmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++            return;
++          }
+@@ -1307 +1410,9 @@
+-          if (tmin > dmax) return;
++          if (tmin > dmax) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++            return;
++          }
+@@ -1321,0 +1433,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1329,0 +1447,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("Check_And_Enqueue");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

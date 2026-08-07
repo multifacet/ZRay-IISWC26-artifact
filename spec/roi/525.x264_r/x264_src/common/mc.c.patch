@@ -1,47 +1,36 @@
 --- a/525.x264_r/x264_src/common/mc.c
 +++ b/525.x264_r/x264_src/common/mc.c
-@@ -123,0 +124,6 @@
-+#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_begin("mc_weight");
-+#endif
-+#ifdef ZRAY_ROI_INSTRUMENTATION
-+asm volatile("#ZRAY_ROI_BEGIN 1");
-+#endif
-@@ -135,0 +142,6 @@
-+#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("mc_weight");
-+#endif
-+#ifdef ZRAY_ROI_INSTRUMENTATION
-+asm volatile("#ZRAY_ROI_END 1");
-+#endif
-@@ -231,0 +244,5 @@
+@@ -35,0 +36,5 @@
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
-@@ -236,0 +254,6 @@
+@@ -235 +240 @@
+-                         int i_width, int i_height, const x264_weight_t *weight )
++                         int i_width, int i_height, const x264_weight_t *weight ) __attribute__((noinline)) /* Disable inlining for ZRay ROI */
+@@ -236,0 +242,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("get_ref");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_BEGIN 1");
 +#endif
-@@ -247,0 +271,6 @@
+@@ -247,0 +259,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_end("get_ref");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
-@@ -252,0 +282,6 @@
+@@ -252,0 +270,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_end("get_ref");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");
 +#endif
-@@ -257,0 +293,6 @@
+@@ -257,0 +281,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_end("get_ref");
 +#endif

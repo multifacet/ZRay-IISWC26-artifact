@@ -1,21 +1,21 @@
---- a/500.perlbench_r/regexec.c
-+++ b/500.perlbench_r/regexec.c
-@@ -268,0 +269,5 @@
+--- a/500.perlbench_r/pp_ctl.c
++++ b/500.perlbench_r/pp_ctl.c
+@@ -40,0 +41,5 @@
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
-@@ -4815,0 +4821,6 @@
+@@ -2065,0 +2071,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_begin("S_regmatch");
++    custom_roi_begin("pp_enter");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_BEGIN 1");
 +#endif
-@@ -8045,0 +8057,6 @@
+@@ -2073,0 +2085,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
-+    custom_roi_end("S_regmatch");
++    custom_roi_end("pp_enter");
 +#endif
 +#ifdef ZRAY_ROI_INSTRUMENTATION
 +asm volatile("#ZRAY_ROI_END 1");

@@ -1,11 +1,13 @@
 --- a/520.omnetpp_r/simulator/csimulation.cc
 +++ b/520.omnetpp_r/simulator/csimulation.cc
-@@ -470,0 +471,5 @@
+@@ -471 +471,6 @@
+-cSimpleModule *cSimulation::selectNextModule()
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
++cSimpleModule *cSimulation::selectNextModule() __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -472,0 +478,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("cSimulation::selectNextModule");

@@ -1,11 +1,13 @@
 --- a/520.omnetpp_r/simulator/cmessageheap.cc
 +++ b/520.omnetpp_r/simulator/cmessageheap.cc
-@@ -222,0 +223,5 @@
+@@ -223 +223,6 @@
+-cMessage *cMessageHeap::removeFirst()
 +/* Add instrumentation function for the pintool */
 +#ifdef PIN_ROI_INSTRUMENTATION
 +#include <pinroi.h>
 +#endif
 +
++cMessage *cMessageHeap::removeFirst() __attribute__((noinline)) /* Disable inlining for ZRay ROI */
 @@ -224,0 +230,6 @@
 +#ifdef PIN_ROI_INSTRUMENTATION
 +    custom_roi_begin("cMessageHeap::removeFirst");
