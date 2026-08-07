@@ -1,0 +1,33 @@
+--- a/523.xalancbmk_r/xalanc/PlatformSupport/ReusableArenaAllocator.hpp
++++ b/523.xalancbmk_r/xalanc/PlatformSupport/ReusableArenaAllocator.hpp
+@@ -28,0 +29,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -85,0 +91,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("destroyObject");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -90 +101,7 @@
+-		if ( this->m_blocks.empty() )
++		if ( this->m_blocks.empty() ) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("destroyObject");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -91,0 +109 @@
++		}
+@@ -174,0 +193,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("destroyObject");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

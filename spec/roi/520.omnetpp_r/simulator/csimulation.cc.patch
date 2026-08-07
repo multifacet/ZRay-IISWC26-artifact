@@ -1,0 +1,40 @@
+--- a/520.omnetpp_r/simulator/csimulation.cc
++++ b/520.omnetpp_r/simulator/csimulation.cc
+@@ -470,0 +471,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -472,0 +478,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("cSimulation::selectNextModule");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 2");
++#endif
+@@ -476 +487,7 @@
+-    if (!msg)
++    if (!msg) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("cSimulation::selectNextModule");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 2");
++#endif
+@@ -477,0 +495 @@
++    }
+@@ -491,0 +510,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("cSimulation::selectNextModule");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 2");
++#endif
+@@ -497,0 +522,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("cSimulation::selectNextModule");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 2");
++#endif

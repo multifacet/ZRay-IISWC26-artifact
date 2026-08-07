@@ -1,0 +1,22 @@
+--- a/500.perlbench_r/ext/re/re_exec.c
++++ b/500.perlbench_r/ext/re/re_exec.c
+@@ -268,0 +269,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -4807,0 +4813,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("S_regmatch");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 2");
++#endif
+@@ -8037,0 +8049,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("S_regmatch");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 2");
++#endif

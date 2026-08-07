@@ -1,0 +1,59 @@
+--- a/502.gcc_r/bitmap.c
++++ b/502.gcc_r/bitmap.c
+@@ -31,0 +32,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -630,0 +636,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("bitmap_set_bit");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -641,0 +653,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("bitmap_set_bit");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -648,0 +666,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("bitmap_set_bit");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -657,0 +681,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("bitmap_bit_p");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -663 +692,7 @@
+-  if (ptr == 0)
++  if (ptr == 0) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("bitmap_bit_p");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -664,0 +700 @@
++  }
+@@ -667,0 +704 @@
++  int value = (ptr->bits[word_num] >> bit_num) & 1;
+@@ -669 +706,8 @@
+-  return (ptr->bits[word_num] >> bit_num) & 1;
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("bitmap_bit_p");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++//   return (ptr->bits[word_num] >> bit_num) & 1;
++  return value;

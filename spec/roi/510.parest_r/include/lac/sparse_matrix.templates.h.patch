@@ -1,0 +1,29 @@
+--- a/510.parest_r/include/lac/sparse_matrix.templates.h
++++ b/510.parest_r/include/lac/sparse_matrix.templates.h
+@@ -43,0 +44,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -540,0 +546,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("SparseMatrix<number>::vmult");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -586,0 +598,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("SparseMatrix<number>::vmult");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -604,0 +622,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("SparseMatrix<number>::vmult");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

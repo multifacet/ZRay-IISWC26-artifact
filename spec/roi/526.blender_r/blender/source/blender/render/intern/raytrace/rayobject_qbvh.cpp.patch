@@ -1,0 +1,51 @@
+--- a/526.blender_r/blender/source/blender/render/intern/raytrace/rayobject_qbvh.cpp
++++ b/526.blender_r/blender/source/blender/render/intern/raytrace/rayobject_qbvh.cpp
+@@ -42,0 +43,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -98,0 +104,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("intersect");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -101,4 +112,28 @@
+-		if (isec->mode == RE_RAY_SHADOW)
+-			return svbvh_node_stack_raycast<StackSize, true>(obj->root, isec);
+-		else
+-			return svbvh_node_stack_raycast<StackSize, false>(obj->root, isec);
++		if (isec->mode == RE_RAY_SHADOW) {
++			int ro_aligned = svbvh_node_stack_raycast<StackSize, true>(obj->root, isec);
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("intersect");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++			return ro_aligned;
++		} else {
++			int ro_unaligned = svbvh_node_stack_raycast<StackSize, false>(obj->root, isec);
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("intersect");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++			return ro_unaligned;
++		}
++	} else {
++		int intersect_else = RE_rayobject_intersect((RayObject *)obj->root, isec);
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("intersect");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++		return intersect_else;
+@@ -106,2 +140,0 @@
+-	else
+-		return RE_rayobject_intersect((RayObject *)obj->root, isec);

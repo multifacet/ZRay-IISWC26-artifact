@@ -1,0 +1,22 @@
+--- a/519.lbm_r/lbm.c
++++ b/519.lbm_r/lbm.c
+@@ -13,0 +14,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -262,0 +268,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("LBM_performStreamCollideTRT");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -401,0 +413,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("LBM_performStreamCollideTRT");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

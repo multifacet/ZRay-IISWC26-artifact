@@ -1,0 +1,30 @@
+--- a/544.nab_r/eff.c
++++ b/544.nab_r/eff.c
+@@ -6,0 +7,6 @@
++
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -3204,0 +3211,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("mme34");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -3266,0 +3279,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("mme34");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -3834,0 +3853,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("mme34");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

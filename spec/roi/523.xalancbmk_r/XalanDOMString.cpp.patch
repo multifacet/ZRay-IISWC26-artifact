@@ -1,0 +1,66 @@
+--- a/523.xalancbmk_r/XalanDOMString.cpp
++++ b/523.xalancbmk_r/XalanDOMString.cpp
+@@ -30,0 +31,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -699 +703,0 @@
+-
+@@ -706,0 +711,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -708,0 +719,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -712,0 +729,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -724,0 +747,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -732,0 +761,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -743,0 +778,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -748,0 +789,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -752,0 +799,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("XalanDOMString::equals");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

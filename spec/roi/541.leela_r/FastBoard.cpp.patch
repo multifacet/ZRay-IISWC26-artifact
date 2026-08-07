@@ -1,0 +1,77 @@
+--- a/541.leela_r/FastBoard.cpp
++++ b/541.leela_r/FastBoard.cpp
+@@ -656,0 +657,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -657,0 +663,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("merge_strings");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -697,0 +709,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("merge_strings");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1271,0 +1289,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -1275,0 +1299,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1281,0 +1311,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1288,0 +1324,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1318 +1359,10 @@
+-                if (nbr_libs_cnt > 1) return false;
++                if (nbr_libs_cnt > 1) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++			return false;
++		}
++                // if (nbr_libs_cnt > 1) return false;
+@@ -1330,0 +1381,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -1335,0 +1392,7 @@
++
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("self_atari");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

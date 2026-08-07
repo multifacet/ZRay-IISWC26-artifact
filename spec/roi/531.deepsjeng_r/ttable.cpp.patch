@@ -1,0 +1,36 @@
+--- a/531.deepsjeng_r/ttable.cpp
++++ b/531.deepsjeng_r/ttable.cpp
+@@ -172,0 +173,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -176,0 +182,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("ProbeTT");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -229,0 +241,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("ProbeTT");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -247,0 +265,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("ProbeTT");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -252,0 +276,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("ProbeTT");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

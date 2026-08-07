@@ -1,0 +1,55 @@
+--- a/505.mcf_r/implicit.c
++++ b/505.mcf_r/implicit.c
+@@ -442,0 +443,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -449,0 +455,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("price_out_impl");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -509 +520,7 @@
+-        if( resize_prob( net ) )
++        if( resize_prob( net ) ) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("price_out_impl");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -510,0 +528 @@
++	}
+@@ -523 +541,7 @@
+-        if( resize_prob( net ) )
++        if( resize_prob( net ) ) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("price_out_impl");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -524,0 +549 @@
++        }
+@@ -536 +561,7 @@
+-    if (!sorted_array)
++    if (!sorted_array) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("price_out_impl");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -537,0 +569 @@
++    }
+@@ -779,0 +812,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("price_out_impl");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

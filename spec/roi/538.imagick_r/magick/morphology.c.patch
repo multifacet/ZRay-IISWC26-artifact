@@ -1,0 +1,33 @@
+--- a/538.imagick_r/magick/morphology.c
++++ b/538.imagick_r/magick/morphology.c
+@@ -86,0 +87,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -3831,0 +3837,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("MorphologyApply");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -3883 +3894,7 @@
+-  if ( iterations == 0 )
++  if ( iterations == 0 ) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("MorphologyApply");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -3884,0 +3902 @@
++  }
+@@ -4276,0 +4295,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("MorphologyApply");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

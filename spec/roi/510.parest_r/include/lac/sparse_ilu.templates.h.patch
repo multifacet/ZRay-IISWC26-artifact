@@ -1,0 +1,22 @@
+--- a/510.parest_r/include/lac/sparse_ilu.templates.h
++++ b/510.parest_r/include/lac/sparse_ilu.templates.h
+@@ -22,0 +23,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -171,0 +177,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("SparseILU<number>::vmult");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -239,0 +251,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("SparseILU<number>::vmult");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

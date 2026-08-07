@@ -1,0 +1,33 @@
+--- a/508.namd_r/ComputeNonbondedInl.h
++++ b/508.namd_r/ComputeNonbondedInl.h
+@@ -27,0 +28,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -36,0 +42,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("pairlist_from_pairlist");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -42 +53,9 @@
+-  if ( list_size <= 0) return 0;
++  if ( list_size <= 0) {
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("pairlist_from_pairlist");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
++	  return 0;
++  }
+@@ -177,0 +197,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("pairlist_from_pairlist");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

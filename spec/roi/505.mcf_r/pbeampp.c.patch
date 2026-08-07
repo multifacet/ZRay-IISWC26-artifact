@@ -1,0 +1,28 @@
+--- a/505.mcf_r/pbeampp.c
++++ b/505.mcf_r/pbeampp.c
+@@ -77,0 +78,4 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
+@@ -95,0 +100,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("primal_bea_mpp");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 0");
++#endif
+@@ -174,0 +185,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("primal_bea_mpp");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 0");
++#endif
+@@ -185,0 +202,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("primal_bea_mpp");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 0");
++#endif

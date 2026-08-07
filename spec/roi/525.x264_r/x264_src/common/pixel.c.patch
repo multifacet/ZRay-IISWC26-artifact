@@ -1,0 +1,22 @@
+--- a/525.x264_r/x264_src/common/pixel.c
++++ b/525.x264_r/x264_src/common/pixel.c
+@@ -233,0 +234,5 @@
++/* Add instrumentation function for the pintool */
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
++
+@@ -235,0 +241,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_begin("x264_pixel_satd_8x4");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -251,0 +263,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++    custom_roi_end("x264_pixel_satd_8x4");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif

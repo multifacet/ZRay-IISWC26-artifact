@@ -1,0 +1,27 @@
+--- a/557.xz_r/liblzma/lz/lz_encoder_mf.c
++++ b/557.xz_r/liblzma/lz/lz_encoder_mf.c
+@@ -679,0 +680,3 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++#include <pinroi.h>
++#endif
+@@ -684,0 +688,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++	custom_roi_begin("lzma_mf_bt4_find");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_BEGIN 1");
++#endif
+@@ -722,0 +732,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++			custom_roi_end("lzma_mf_bt4_find");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
+@@ -730,0 +746,6 @@
++#ifdef PIN_ROI_INSTRUMENTATION
++	custom_roi_end("lzma_mf_bt4_find");
++#endif
++#ifdef ZRAY_ROI_INSTRUMENTATION
++asm volatile("#ZRAY_ROI_END 1");
++#endif
