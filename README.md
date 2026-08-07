@@ -118,7 +118,9 @@ columns in `zray-byte-stats.csv`. The load/store totals use the paper's operatio
 definition of heap accesses: the Pintool excludes RSP-based stack accesses, while
 ZRay reports dedicated heap load/store columns in `zray-gapbs-stats.csv`.
 
-Instruction counts may differ between ZRay and Pin while byte counts remain accurate. This is because the two tools attribute bulk copies differently: a `memcpy`/`memmove` is
+Load and store counts may differ between ZRay and Pin while byte counts remain
+accurate. This is because the two tools attribute bulk copies differently: a
+`memcpy`/`memmove` is
 a single IR instruction to ZRay, which records its byte length and estimates an access
 count from it, while Pin counts the machine-level accesses the lowered copy performs.
 In `sssp`, whose `RelaxEdges` region resizes and appends to `std::vector`, this makes
