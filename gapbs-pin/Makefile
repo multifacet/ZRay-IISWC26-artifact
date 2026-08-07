@@ -3,7 +3,9 @@ CXX=$(CUSTOM_CC)
 
 CXX_FLAGS += -std=c++11 -O2 -Wall# -fno-inline
 PAR_FLAG = -fopenmp=libomp
-ZRAY_LINK_FLAGS = -std=c++11 -Wall# -fno-inline
+# -O2 must be here as well as in CXX_FLAGS: opt optimizes the IR, but this step runs
+# codegen, and without -O2 clang emits it at -O0. That cost 1.87x on tc.
+ZRAY_LINK_FLAGS = -std=c++11 -O2 -Wall# -fno-inline
 
 ifneq (,$(findstring icpc,$(CXX)))
 	PAR_FLAG = -openmp

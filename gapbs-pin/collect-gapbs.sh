@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! -f ./pin-gapbs-stats.csv ]; then
-    echo "Name,Total Loads,Total Stores,Elapsed Real Time (Uninstrumented),Elapsed Real Time (Pin),Max RSS (kB)" >> pin-gapbs-stats.csv
+    echo "Name,Total Loads,Total Stores,Warmup Elapsed Real Time,Elapsed Real Time (Pin),Warmup Max RSS (kB)" >> pin-gapbs-stats.csv
 fi
 
 kernels=("bc" "bfs" "cc" "cc_sv" "pr" "pr_spmv" "sssp" "tc")
@@ -10,6 +10,10 @@ BASE_DIR=$(pwd)
 make clean
 make
 
+# The uninstrumented run below is a warm-up for the Pin run that follows it: reading
+# the graph is not instrumented, so it should not be paid for the first time inside the
+# measured Pin run. Its time and RSS are still recorded, but only as a sanity check --
+# both tools are normalized against the gapbs/ control, not against this.
 for i in $(seq 0 7); do
     cd $BASE_DIR
     cd ${kernels[$i]}

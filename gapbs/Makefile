@@ -24,10 +24,26 @@ endif
 KERNELS = bc bfs cc cc_sv pr pr_spmv sssp tc
 SUITE = $(KERNELS) converter
 
-.PHONY: all
+# Extra flags passed to the ZRay opt pass.
+ZRAY_PASS_FLAGS ?=
+
+# Uninstrumented binaries used as the timing/RSS baseline. Same sources and same
+# optimization pipeline as the default build, but without the ZRay pass, so the only
+# difference is the instrumentation itself. The ZRAY_ROI markers are inline asm
+# comments that emit no code, so they are left in place: both builds then carry the
+# same optimization barriers and the comparison isolates ZRay's counters.
+KERNELS_BASELINE = $(addsuffix -baseline,$(KERNELS))
+
+.PHONY: all baseline
 all: $(SUITE)
 
+baseline: $(KERNELS_BASELINE)
+
 $(KERNELS): % : src/%_linked.ll
+	cd $*; $(CXX) -L/usr/lib/llvm-15/lib/ $(ZRAY_LINK_FLAGS) ../$< -o $@
+
+# No zray_runtime.ll is linked here: without the pass there are no counter calls.
+$(KERNELS_BASELINE): %-baseline : src/%_baseline_optimized.ll
 	cd $*; $(CXX) -L/usr/lib/llvm-15/lib/ $(ZRAY_LINK_FLAGS) ../$< -o $@
 
 src/%_linked.ll : src/%_optimized.ll $(ZRAY_BIN_PATH)/zray_runtime.ll
@@ -35,7 +51,11 @@ src/%_linked.ll : src/%_optimized.ll $(ZRAY_BIN_PATH)/zray_runtime.ll
 
 src/%_optimized.ll : src/%.ll
 	mkdir -p $*
-	cd $*; $(CUSTOM_OPT) -enable-new-pm=0 -O2 -mem2reg -load $(ZRAY_BIN_PATH)/libzray.so -zray ../$< -o ../$@
+	cd $*; $(CUSTOM_OPT) -enable-new-pm=0 -O2 -mem2reg -load $(ZRAY_BIN_PATH)/libzray.so -zray $(ZRAY_PASS_FLAGS) ../$< -o ../$@
+
+src/%_baseline_optimized.ll : src/%.ll
+	mkdir -p $*
+	cd $*; $(CUSTOM_OPT) -enable-new-pm=0 -O2 -mem2reg ../$< -o ../$@
 
 src/%.ll : src/%.cc src/*.h
 	$(CXX) $(CXX_FLAGS) -S -emit-llvm $< -o $@
