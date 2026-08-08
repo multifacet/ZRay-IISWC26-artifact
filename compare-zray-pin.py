@@ -130,16 +130,24 @@ def parse_pin_log(path):
                 threads += 1
                 func = None
                 continue
-            if ":" not in line:
-                continue
-            key, _, raw = line.partition(":")
-            key, raw = key.strip(), raw.strip()
-            value = num(raw)
-
-            if key == "Function":
-                func = raw
+            # "Function:" is the one line whose delimiter is its FIRST colon, since
+            # the name that follows may itself contain "::". Take it before the
+            # general case below.
+            if line.startswith("Function:"):
+                func = line.partition(":")[2].strip()
                 funcs.setdefault(func, {})
                 continue
+            if ":" not in line:
+                continue
+            # Split on the LAST colon: a data line is "<function> <field>:<value>",
+            # and C++ ROI names embed "::" (SparseMatrix<number>::vmult,
+            # cMessageHeap::removeFirst, XalanDOMString::equals). Partitioning on the
+            # first colon put the value into the key and silently dropped the line,
+            # which zeroed the byte volumes for exactly those workloads while their
+            # counts -- read from the "Total Number of" lines -- still looked right.
+            key, _, raw = line.rpartition(":")
+            key, raw = key.strip(), raw.strip()
+            value = num(raw)
             if key.startswith("Total Number of"):
                 if value is not None:
                     totals[key] = totals.get(key, 0) + value
