@@ -1,34 +1,38 @@
 #!/bin/bash
 #
-# TEMPORARY: run every step of the README's "At a glance" flow, recording wall
-# time and peak RSS for each, so the artifact can quote realistic time and memory
-# demands. Not part of the artifact proper -- delete once the numbers are taken.
+# Main artifact-evaluation harness: run every step of the README's "At a glance"
+# flow end to end, recording wall time and peak RSS for each.
 #
 # Usage:
-#   ./pipeline-timing.sh [--spec-path=PATH] [step ...]
+#   ./run-ae.sh [--spec-path=PATH] [step ...]
 #
-#   ./pipeline-timing.sh --spec-path=/proj/instrument-PG0/spec2017.iso
-#   ./pipeline-timing.sh gapbs gapbs-pin          # just those two steps
+#   ./run-ae.sh --spec-path=/path/to/spec2017.iso
+#   ./run-ae.sh gapbs gapbs-pin          # just those two steps
 #
 # Steps: setup, gapbs, gapbs-pin, spec, spec-pin, report
 #
-# Results append to pipeline_timing.txt; the full `/usr/bin/time --verbose` dump
-# for each step goes to pipeline_timing_raw.txt, and each step's own stdout/stderr
-# to pipeline_logs/<step>.log.
+# With no steps named, all six run in order. The SPEC steps need SPEC installed;
+# pass --spec-path to have the setup step install it first. A step that fails is
+# recorded as FAILED.
+#
+# Results append to ae_timing.txt; the full `/usr/bin/time --verbose` dump
+# for each step goes to ae_timing_raw.txt, and each step's own stdout/stderr
+# to ae_logs/<step>.log.
 
 ARTIFACT_HOME="$(cd "$(dirname "$0")" && pwd)"
 cd "$ARTIFACT_HOME"
 
-SUMMARY="$ARTIFACT_HOME/pipeline_timing.txt"
-RAW="$ARTIFACT_HOME/pipeline_timing_raw.txt"
-LOGDIR="$ARTIFACT_HOME/pipeline_logs"
+SUMMARY="$ARTIFACT_HOME/ae_timing.txt"
+RAW="$ARTIFACT_HOME/ae_timing_raw.txt"
+LOGDIR="$ARTIFACT_HOME/ae_logs"
 SPEC_PATH="${SPEC_PATH:-}"
 
 STEPS=()
 for arg in "$@"; do
     case "$arg" in
         --spec-path=*) SPEC_PATH="${arg#*=}" ;;
-        -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+        # Print the header block, stopping at the blank line that ends it.
+        -h|--help) sed -n '2,/^$/p' "$0"; exit 0 ;;
         *) STEPS+=("$arg") ;;
     esac
 done
@@ -41,7 +45,7 @@ mkdir -p "$LOGDIR"
 
 {
     echo "================================================================"
-    echo "Pipeline timing run started $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "Artifact evaluation run started $(date '+%Y-%m-%d %H:%M:%S')"
     echo "Host: $(hostname)   Cores: $(nproc)   Mem: $(free -g | awk '/^Mem:/{print $2}') GB"
     echo "================================================================"
     printf "%-14s %11s %14s %12s  %s\n" "STEP" "WALL" "WALL (h:mm:ss)" "PEAK RSS" "STATUS"

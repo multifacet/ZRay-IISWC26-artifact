@@ -7,7 +7,7 @@ verifying ZRay's functionality.
 ## Requirements
 
 - Ubuntu 22.04
-- At least 80 GB of free storage. The GAPBS Twitter graphs account for most of it (31 GB downloaded, 44 GB converted). The optional SPEC CPU2017 workflow needs a further 10 GB once built, plus about 3 GB transiently while the ISO is unpacked.
+- At least 80 GB of free storage. The GAPBS Twitter graphs account for most of it (31 GB downloaded, 44 GB converted). The optional SPEC CPU2017 workflow needs a further 17 GB once built, plus about 3 GB transiently while the ISO is unpacked. Approximately 120 GB required to run everything.
 - `sudo` access and an Internet connection during setup
 
 We recommend using a CloudLab `sm110p` or `sm220u` node and selecting the maximum
@@ -21,15 +21,24 @@ hardware and thread count.
 
 ## At a glance
 
-Set the machine up once, then run whichever suites you want. Each run script
-builds whatever it needs on first use, so there is no separate build step.
+`run-ae.sh` is the main harness. It performs setup, runs every suite, and writes the
+comparison report:
+
+```bash
+./run-ae.sh --spec-path=/path/to/spec2017.iso
+```
+
+See [Running Evaluation Harness](#running-evaluation-harness) for its
+individual stages.
+
+The steps executed by the harness can be manually executed as shown below. Each run script builds its dependencies on the first use.
 
 ```bash
 ./setup.sh --with-pin --with-spec --spec-path=/path/to/spec2017.iso
 
 ./run-gapbs.sh        # GAPBS: control + ZRay
 ./run-gapbs-pin.sh    # GAPBS: Pin
-./run-spec.sh         # SPEC:  control + ZRay   (builds on first run, ~50 min)
+./run-spec.sh         # SPEC:  control + ZRay   (builds on first run, ~70 min)
 ./run-spec-pin.sh     # SPEC:  Pin
 
 python3 compare-zray-pin.py -o report.txt
@@ -160,8 +169,8 @@ rather than risk placing markers in the wrong place.
 ```
 
 This installs SPEC into `spec2017/` (override with `--spec-install=PATH`; the tree
-reaches about 10 GB once the workloads are built). It does not build the workloads: `./run-spec.sh` does that on
-its first invocation, taking about 50 minutes to build each workload three times -
+reaches about 17 GB once the workloads are built). It does not build the workloads: `./run-spec.sh` does that on
+its first invocation, taking about 70 minutes on a 40-core machine to build every workload three times -
 control, ZRay, and Pin - and staging the binaries into the run directories.
 Subsequent runs detect the existing binaries and skip straight to measuring; pass
 `FORCE_BUILD=1` to rebuild. Add `--with-pin` to perform the Pin
@@ -222,6 +231,33 @@ workload whose logs cannot be found falls back to its CSV row.
 Run `./run-gapbs.sh` first. The Pin scripts are optional: without them the Pin columns
 are reported as `-` and the ZRay measurements are still shown. Likewise, SPEC rows
 appear only once `./run-spec.sh` has been run.
+
+## Running Evaluation Harness
+
+`run-ae.sh` runs every step above in order. A subset of steps can be invoked with command-line arguments.
+
+```bash
+./run-ae.sh --spec-path=/path/to/spec2017.iso   # Full evaluation
+./run-ae.sh gapbs gapbs-pin                     # GAPBS only
+./run-ae.sh --help
+```
+
+The steps are `setup`, `gapbs`, `gapbs-pin`, `spec`, `spec-pin`, and `report`. All six run in order by default. A step that fails is recorded as FAILED.
+
+Primary outputs are a one-line-per-step summary appended to
+`ae_timing.txt`, and each step's own stdout and stderr under
+`ae_logs/<step>.log`.
+
+For reference, on a 40-core Xeon with 187 GB of RAM:
+
+| step | wall time |
+| --- | --- |
+| `setup` (with Pin and SPEC) | ~42 min |
+| `gapbs` | ~20 min |
+| `gapbs-pin` | ~40 min |
+| `spec` (~70 min of it the first build) | ~3 h |
+| `spec-pin` | ~6 h 40 min |
+| `report` | <1 s |
 
 ## Re-running experiments
 
