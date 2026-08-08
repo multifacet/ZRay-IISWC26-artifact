@@ -54,7 +54,33 @@ fi
 # run_000-142_<binary>_x264.out -- and rewriting those corrupts the redirect
 # target (a "./" lands mid-filename, naming a directory that does not exist), so
 # the command fails with no output and no obvious cause.
-"$SPECINVOKE" -n \
+# specinvoke reports failures on STDOUT and the exit status of the pipeline below
+# would be sed's, so neither `set -e` nor a bare pipe catches a failure here: the
+# error text ends up as the body of the generated run script, which then dies with
+# a shell syntax error naming no cause. Check the preconditions and the output
+# explicitly instead.
+if [ ! -f "$RUN_DIR/speccmds.cmd" ]; then
+    echo "no speccmds.cmd in $RUN_DIR" >&2
+    echo "SPEC writes it during --action=setup. A stale run directory from an" >&2
+    echo "earlier build can leave the staged binaries here while setup writes the" >&2
+    echo "command file to a sibling run_base_..0001; rebuild with FORCE_BUILD=1." >&2
+    exit 1
+fi
+
+if ! raw=$("$SPECINVOKE" -n 2>&1); then
+    echo "specinvoke failed in $RUN_DIR:" >&2
+    printf '%s\n' "$raw" | sed 's/^/  /' >&2
+    exit 1
+fi
+
+cmds=$(printf '%s\n' "$raw" \
     | grep -vE '^#|^specinvoke exit' \
     | grep -v '^[[:space:]]*$' \
-    | sed "s#\.\./run_base_[^/]*/${stock}#${replacement}#g"
+    | sed "s#\.\./run_base_[^/]*/${stock}#${replacement}#g")
+
+if [ -z "$cmds" ]; then
+    echo "specinvoke produced no commands in $RUN_DIR" >&2
+    exit 1
+fi
+
+printf '%s\n' "$cmds"

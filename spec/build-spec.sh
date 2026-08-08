@@ -84,11 +84,33 @@ python3 "$ARTIFACT_HOME/spec/make-spec-config.py" \
 echo "==> Stock SPEC build (records make.out and creates run directories)"
 cd "$SPEC_INSTALL"
 . ./shrc
-# --rebuild is required, not merely tidy: SPEC records built binaries under
-# benchspec/CPU/<workload>/exe and otherwise reports "Up to date" and leaves the
-# build directory alone. Since a previous run leaves that directory holding
-# ROI-patched sources, skipping the rebuild would feed already-patched files back
-# into the patch step, which the checksum guard then rejects.
+
+# Remove the build directories outright before setup repopulates them from src/.
+#
+# --rebuild is necessary but NOT sufficient. It stops SPEC reporting "Up to date"
+# (binaries are tracked under benchspec/CPU/<workload>/exe), and it re-touches the
+# build directory -- but it does not restore files a previous run modified in place.
+# The ROI patches edit build-directory sources, so those edits survive: a re-run finds
+# already-patched files, the checksum guard sees non-pristine input, and the build
+# aborts. Observed as "5 of 25 target files are not pristine" with src/ still matching
+# the manifest exactly, proving the stale copies came from the build tree.
+#
+# Remove the whole build/ AND run/ trees, not just build_base_<label>-m64.0000. SPEC
+# numbers both sequentially and picks the next free index, so deleting only .0000 --
+# or deleting build/ while leaving a stale run/ behind -- makes it create .0001, and
+# every consumer here (apply-roi-patches.py, make-build-scripts.py, spec-cmds.sh)
+# resolves the .0000 name.
+#
+# Leaving run/ in place is not harmless: setup then writes speccmds.cmd and the input
+# files to run_base_..0001 while this script stages the instrumented binaries into
+# the pre-existing .0000. The two halves end up in different directories and the
+# workload fails at measurement time, long after the build looked successful. That is
+# what happened to 525.x264_r.
+for w in "${WORKLOADS[@]}"; do
+    rm -rf "$SPEC_INSTALL/benchspec/CPU/$w/build" \
+           "$SPEC_INSTALL/benchspec/CPU/$w/run"
+done
+
 runcpu --config=$LABEL --action=setup --size=train --tune=base \
        --copies=1 --noreportable --rebuild --define build_ncpus="$JOBS" \
        "${WORKLOADS[@]}"

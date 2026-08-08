@@ -64,6 +64,19 @@
 # committed to this repository.
 /ZRay-SPEC-test-setup/
 
+# A separate ZRay lineage, cloned here while the MST placement arm was ported across.
+# It is its own repository and is not part of this artifact.
+/customPass/
+
+# Scratch tree for the counter-placement comparison (ZRay vs LLVM PGO's MST). Built
+# from gapbs sources with its graphs symlinked to gapbs/. Not part of the artifact as
+# submitted; ignored so an `add -A` cannot sweep it in. Force-add it deliberately if
+# that study is ever included.
+/gapbs-mst/
+
+# Python bytecode from compare-zray-pin.py and the spec/ helpers.
+__pycache__/
+
 # Intel Pin and Pintool build artifacts
 # -------------------------------------
 # Pin is downloaded by setup.sh --with-pin and is subject to Intel's license; it is
